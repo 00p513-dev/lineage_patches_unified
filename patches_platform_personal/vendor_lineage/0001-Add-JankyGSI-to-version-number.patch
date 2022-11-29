@@ -1,0 +1,25 @@
+From d50c954b33e47c0c3185f0e30275445ba3eddc20 Mon Sep 17 00:00:00 2001
+From: Amy <amy@amyrom.ml>
+Date: Tue, 29 Nov 2022 02:07:28 +0000
+Subject: [PATCH] Add JankyGSI to version number
+
+---
+ config/version.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/version.mk b/config/version.mk
+index 0d15a03..619bc9e 100644
+--- a/config/version.mk
++++ b/config/version.mk
+@@ -25,7 +25,7 @@ endif
+ 
+ ifeq ($(LINEAGE_BUILDTYPE), UNOFFICIAL)
+     ifneq ($(TARGET_UNOFFICIAL_BUILD_ID),)
+-        LINEAGE_EXTRAVERSION := -$(TARGET_UNOFFICIAL_BUILD_ID)
++        LINEAGE_EXTRAVERSION := -JankyGSI-$(TARGET_UNOFFICIAL_BUILD_ID)
+     endif
+ endif
+ 
+-- 
+2.37.1 (Apple Git-137.1)
+
