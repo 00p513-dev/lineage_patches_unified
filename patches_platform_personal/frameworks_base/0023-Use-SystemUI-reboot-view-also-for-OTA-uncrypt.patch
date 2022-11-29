@@ -1,0 +1,43 @@
+From 5d771c74b2195483d1b5610dd7048039983ec5fd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Timi=20Rautam=C3=A4ki?= <timi.rautamaki@gmail.com>
+Date: Wed, 2 Jun 2021 23:10:30 +0200
+Subject: [PATCH 2/2] Use SystemUI reboot view also for OTA uncrypt
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Test: apply update, observe new behaviour instead of ProgressDialog
+Change-Id: I217eea3c18c43854124a0a4c79af4959052de3f2
+Signed-off-by: Timi Rautamäki <timi.rautamaki@gmail.com>
+Signed-off-by: Pranav Vashi <neobuddy89@gmail.com>
+---
+ .../core/java/com/android/server/power/ShutdownThread.java  | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/services/core/java/com/android/server/power/ShutdownThread.java b/services/core/java/com/android/server/power/ShutdownThread.java
+index 0f75a945..f6b437c9 100644
+--- a/services/core/java/com/android/server/power/ShutdownThread.java
++++ b/services/core/java/com/android/server/power/ShutdownThread.java
+@@ -321,6 +321,9 @@ public final class ShutdownThread extends Thread {
+             // reboot, which might be time-consuming.
+             mRebootHasProgressBar = RecoverySystem.UNCRYPT_PACKAGE_FILE.exists()
+                     && !(RecoverySystem.BLOCK_MAP_FILE.exists());
++            if (showSysuiReboot()) {
++                return null;
++            }
+             pd.setTitle(context.getText(com.android.internal.R.string.reboot_to_update_title));
+             if (mRebootHasProgressBar) {
+                 pd.setMax(100);
+@@ -331,9 +334,6 @@ public final class ShutdownThread extends Thread {
+                 pd.setMessage(context.getText(
+                             com.android.internal.R.string.reboot_to_update_prepare));
+             } else {
+-                if (showSysuiReboot()) {
+-                    return null;
+-                }
+                 pd.setIndeterminate(true);
+                 pd.setMessage(context.getText(
+                             com.android.internal.R.string.reboot_to_update_reboot));
+-- 
+2.37.1 (Apple Git-137.1)
+

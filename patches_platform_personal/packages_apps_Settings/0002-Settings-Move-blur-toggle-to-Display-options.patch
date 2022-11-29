@@ -1,0 +1,124 @@
+From 90377e8c2375a7c1e1ef35f7e3a25d65714e0456 Mon Sep 17 00:00:00 2001
+From: Jyotiraditya <imjyotiraditya@pm.me>
+Date: Sat, 26 Feb 2022 16:14:30 +0100
+Subject: [PATCH 1/3] Settings: Move blur toggle to Display options.
+
+Change-Id: I40836a814418bffdbf9500ae30027bf343e3d540
+---
+ res/values/cm_strings.xml                        |  3 +++
+ res/xml/display_settings.xml                     |  5 +++++
+ src/com/android/settings/DisplaySettings.java    |  2 ++
+ .../DevelopmentSettingsDashboardFragment.java    |  1 -
+ .../EnableBlursPreferenceController.java         | 16 ++++------------
+ 5 files changed, 14 insertions(+), 13 deletions(-)
+ rename src/com/android/settings/{development => display}/EnableBlursPreferenceController.java (80%)
+
+diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
+index fb73b64..698ea37 100644
+--- a/res/values/cm_strings.xml
++++ b/res/values/cm_strings.xml
+@@ -194,4 +194,7 @@
+ 
+     <!-- Warning message for the sd card setup -->
+     <string name="storage_warning_internal">Warning: This option may not work properly or lead to data loss and is therefore not recommended!</string>
++
++    <!-- Blur -->
++    <string name="window_blur_mat">Enable blur</string>
+ </resources>
+diff --git a/res/xml/display_settings.xml b/res/xml/display_settings.xml
+index 53f948d..a70da9a 100644
+--- a/res/xml/display_settings.xml
++++ b/res/xml/display_settings.xml
+@@ -226,5 +226,10 @@
+             android:key="vr_display_pref"
+             android:title="@string/display_vr_pref_title"
+             android:fragment="com.android.settings.display.VrDisplayPreferencePicker"/>
++
++        <!-- Custom Preferences go here -->
++        <SwitchPreference
++             android:key="enable_blurs_on_windows"
++             android:title="@string/window_blur_mat" />
+     </PreferenceCategory>
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/DisplaySettings.java b/src/com/android/settings/DisplaySettings.java
+index c733a45..6865ab1 100644
+--- a/src/com/android/settings/DisplaySettings.java
++++ b/src/com/android/settings/DisplaySettings.java
+@@ -23,6 +23,7 @@ import android.os.Bundle;
+ import com.android.settings.dashboard.DashboardFragment;
+ import com.android.settings.display.BrightnessLevelPreferenceController;
+ import com.android.settings.display.CameraGesturePreferenceController;
++import com.android.settings.display.EnableBlursPreferenceController;
+ import com.android.settings.display.LiftToWakePreferenceController;
+ import com.android.settings.display.OverlayCategoryPreferenceController;
+ import com.android.settings.display.ScreenSaverPreferenceController;
+@@ -89,6 +90,7 @@ public class DisplaySettings extends DashboardFragment {
+         controllers.add(new ShowOperatorNamePreferenceController(context));
+         controllers.add(new ThemePreferenceController(context));
+         controllers.add(new BrightnessLevelPreferenceController(context, lifecycle));
++        controllers.add(new EnableBlursPreferenceController(context));
+         controllers.add(new OverlayCategoryPreferenceController(context,
+                 "android.theme.customization.font"));
+         controllers.add(new OverlayCategoryPreferenceController(context,
+diff --git a/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java b/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java
+index 1646fe2..723694c 100644
+--- a/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java
++++ b/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java
+@@ -572,7 +572,6 @@ public class DevelopmentSettingsDashboardFragment extends RestrictedDashboardFra
+         controllers.add(new DebugGpuOverdrawPreferenceController(context));
+         controllers.add(new DebugNonRectClipOperationsPreferenceController(context));
+         controllers.add(new ForceDarkPreferenceController(context));
+-        controllers.add(new EnableBlursPreferenceController(context));
+         controllers.add(new ForceMSAAPreferenceController(context));
+         controllers.add(new HardwareOverlaysPreferenceController(context));
+         controllers.add(new SimulateColorSpacePreferenceController(context));
+diff --git a/src/com/android/settings/development/EnableBlursPreferenceController.java b/src/com/android/settings/display/EnableBlursPreferenceController.java
+similarity index 80%
+rename from src/com/android/settings/development/EnableBlursPreferenceController.java
+rename to src/com/android/settings/display/EnableBlursPreferenceController.java
+index 129d999..436079a 100644
+--- a/src/com/android/settings/development/EnableBlursPreferenceController.java
++++ b/src/com/android/settings/display/EnableBlursPreferenceController.java
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-package com.android.settings.development;
++package com.android.settings.display;
+ 
+ import static android.view.CrossWindowBlurListeners.CROSS_WINDOW_BLUR_SUPPORTED;
+ 
+@@ -26,12 +26,12 @@ import androidx.preference.Preference;
+ import androidx.preference.SwitchPreference;
+ 
+ import com.android.settings.core.PreferenceControllerMixin;
+-import com.android.settingslib.development.DeveloperOptionsPreferenceController;
++import com.android.settingslib.core.AbstractPreferenceController;
+ 
+ /**
+  * Controller that toggles window blurs on devices that support it.
+  */
+-public final class EnableBlursPreferenceController extends DeveloperOptionsPreferenceController
++public final class EnableBlursPreferenceController extends AbstractPreferenceController
+         implements Preference.OnPreferenceChangeListener, PreferenceControllerMixin {
+ 
+     private static final String ENABLE_BLURS_ON_WINDOWS = "enable_blurs_on_windows";
+@@ -69,14 +69,6 @@ public final class EnableBlursPreferenceController extends DeveloperOptionsPrefe
+     public void updateState(Preference preference) {
+         boolean isEnabled = Settings.Global.getInt(mContext.getContentResolver(),
+                     Settings.Global.DISABLE_WINDOW_BLURS, 0) == 0;
+-        ((SwitchPreference) mPreference).setChecked(isEnabled);
+-    }
+-
+-    @Override
+-    protected void onDeveloperOptionsSwitchDisabled() {
+-        super.onDeveloperOptionsSwitchDisabled();
+-        Settings.Global.putInt(mContext.getContentResolver(),
+-                Settings.Global.DISABLE_WINDOW_BLURS, 0);
+-        updateState(null);
++        ((SwitchPreference) preference).setChecked(isEnabled);
+     }
+ }
+-- 
+2.37.1 (Apple Git-137.1)
+

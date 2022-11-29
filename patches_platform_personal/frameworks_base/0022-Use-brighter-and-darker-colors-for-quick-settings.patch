@@ -1,0 +1,41 @@
+From 6c48bc0b6d9587f9cf82541bc49b2de7544219f4 Mon Sep 17 00:00:00 2001
+From: Amy Grace <amy@amyrom.ml>
+Date: Tue, 12 Oct 2021 19:53:36 +0100
+Subject: [PATCH 1/2] Use brighter and darker colors for quick settings
+
+---
+ packages/SystemUI/res/values-night/styles.xml | 2 +-
+ packages/SystemUI/res/values/styles.xml       | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/packages/SystemUI/res/values-night/styles.xml b/packages/SystemUI/res/values-night/styles.xml
+index 812fbb7d..d2e6ca66 100644
+--- a/packages/SystemUI/res/values-night/styles.xml
++++ b/packages/SystemUI/res/values-night/styles.xml
+@@ -30,7 +30,7 @@
+         <item name="android:colorError">@*android:color/error_color_material_dark</item>
+         <item name="android:windowIsFloating">true</item>
+         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+-        <item name="offStateColor">@android:color/system_neutral1_800</item>
++        <item name="offStateColor">@android:color/system_neutral1_900</item>
+         <item name="underSurfaceColor">@android:color/system_neutral1_900</item>
+         <item name="android:colorBackground">@android:color/system_neutral1_900</item>
+         <item name="android:itemTextAppearance">@style/Control.MenuItem</item>
+diff --git a/packages/SystemUI/res/values/styles.xml b/packages/SystemUI/res/values/styles.xml
+index 15e3738f..7f92b209 100644
+--- a/packages/SystemUI/res/values/styles.xml
++++ b/packages/SystemUI/res/values/styles.xml
+@@ -354,8 +354,8 @@
+         <item name="android:windowIsFloating">true</item>
+         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+         <item name="offStateColor">@*android:color/surface_light</item>
+-        <item name="underSurfaceColor">@android:color/system_neutral1_100</item>
+-        <item name="android:colorBackground">@android:color/system_neutral1_50</item>
++        <item name="underSurfaceColor">@android:color/system_neutral1_0</item>
++        <item name="android:colorBackground">@android:color/system_neutral1_0</item>
+         <item name="android:itemTextAppearance">@style/Control.MenuItem</item>
+     </style>
+ 
+-- 
+2.37.1 (Apple Git-137.1)
+
